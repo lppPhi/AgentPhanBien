@@ -3,58 +3,180 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tranh Luận AI</title>
+  <title>Tranh Luận AI Loá Mắt</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50 text-gray-900">
-  <div class="max-w-3xl mx-auto p-6 space-y-6">
-    <h1 class="text-3xl font-bold text-center">🧠 Tranh luận cùng AI</h1>
+  <style>
+    /* Custom Keyframe Animations for extra dazzle */
+    @keyframes pulse-opacity {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.8; }
+    }
+    .disabled:disabled {
+        animation: pulse-opacity 1.5s infinite ease-in-out;
+    }
 
-    <textarea id="topicInput" placeholder="Nhập chủ đề tranh luận (VD: AI có nên thay thế giáo viên?)" class="w-full p-3 border border-gray-300 rounded min-h-[100px]"></textarea>
-    <button onclick="startDebate()" id="debateBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50">
-      Bắt đầu tranh luận
+    @keyframes bounce-slow {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+    .animate-bounce-slow {
+        animation: bounce-slow 3s infinite ease-in-out;
+    }
+     @keyframes pulse-slow {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+    }
+    .animate-pulse-slow {
+        animation: pulse-slow 3s infinite ease-in-out;
+    }
+
+    @keyframes enter-fade-slide {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    .animate-enter-fade-slide {
+        animation: enter-fade-slide 0.8s ease-out forwards;
+    }
+
+    @keyframes shine {
+      0% { background-position: -200%; }
+      100% { background-position: 200%; }
+    }
+    .animate-shine {
+      background: linear-gradient(90deg, #e0e0e0 0%, #ffffff 50%, #e0e0e0 100%);
+      background-size: 200% 100%;
+      animation: shine 1.5s infinite linear;
+    }
+
+    /* Custom scrollbar for better visual */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #a78bfa; /* purple-400 */
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8b5cf6; /* purple-500 */
+    }
+  </style>
+</head>
+<!-- Using a vibrant gradient background -->
+<body class="bg-gradient-to-br from-purple-300 via-pink-400 to-blue-400 min-h-screen p-4 text-gray-800 font-sans">
+  <div class="max-w-4xl mx-auto p-8 space-y-10 bg-white bg-opacity-85 rounded-3xl shadow-2xl backdrop-filter backdrop-blur-xl border border-opacity-30 border-white transition-all duration-300">
+    
+    <!-- Flashy Heading with Text Gradient and Animation -->
+    <h1 class="text-5xl md:text-6xl font-extrabold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-red-600 to-purple-700 drop-shadow-xl">
+      🧠 Tranh luận AI! ✨
+    </h1>
+    
+    <!-- Input Area -->
+    <div class="relative">
+      <label for="topicInput" class="block text-lg font-bold text-indigo-700 mb-3 tracking-wide">💡 Nhập chủ đề tranh luận cực HOT!</label>
+      <textarea id="topicInput" placeholder="Ví dụ: AI có nên thay thế giáo viên? Hay: Trái Đất có phẳng không? 😜" 
+                class="w-full p-4 border-4 border-pink-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-purple-400 min-h-[120px] shadow-xl text-gray-800 placeholder-purple-400 transition duration-300 ease-in-out transform hover:scale-[1.01] focus:border-purple-600 bg-white bg-opacity-90"></textarea>
+      <svg class="absolute bottom-4 right-4 text-purple-500 opacity-60 hidden md:block" width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+      </svg>
+    </div>
+
+    <!-- Button -->
+    <button onclick="startDebate()" id="debateBtn" 
+            class="w-full px-8 py-4 bg-gradient-to-r from-lime-400 to-green-500 text-purple-900 font-extrabold text-xl rounded-full shadow-2xl hover:from-lime-500 hover:to-green-600 hover:shadow-3xl transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:animate-pulse-opacity flex items-center justify-center space-x-3">
+      <span class="text-2xl">🚀</span> <span>Bắt đầu tranh luận ngay!</span> <span class="text-2xl">💥</span>
     </button>
 
-    <div id="resultContainer" class="space-y-4 hidden">
-      <div class="bg-white p-4 border border-gray-300 rounded">
-        <strong class="text-lg">💬 Cuộc tranh luận:</strong>
-        <div class="mt-2 space-y-4 text-sm">
-          <div>
-            <p class="font-semibold text-blue-700">
-              🅰️ Debater A - Vòng 1:
-              <button onclick="speakText('a1')" class="ml-2 text-sm text-blue-500 hover:underline">🔊 Nghe</button><button onclick="stopSpeaking()" class="ml-2 text-sm text-red-500 hover:underline">🛑 Dừng đọc</button>
+    <!-- Result Container -->
+    <div id="resultContainer" class="space-y-8 mt-10 hidden animate-enter-fade-slide">
+      
+      <!-- Debate Rounds Box -->
+      <div class="bg-gradient-to-tr from-blue-100 to-purple-100 p-6 border-4 border-indigo-400 rounded-3xl shadow-2xl">
+        <strong class="text-3xl font-bold text-indigo-800 mb-6 block text-center">💬 Diễn biến Cuộc tranh luận Nảy lửa!</strong>
+        <div class="mt-4 space-y-8 text-base">
+          
+          <!-- Debater A - Round 1 -->
+          <div class="bg-white p-5 rounded-xl shadow-lg border-l-8 border-blue-600 relative group hover:shadow-xl transition duration-200">
+            <p class="font-bold text-xl text-blue-700 flex items-center justify-between mb-2">
+              <span>🅰️ Debater A - Vòng 1:</span>
+              <span class="inline-flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <button onclick="speakText('a1')" class="flex items-center px-3 py-1 bg-blue-200 text-blue-800 rounded-full hover:bg-blue-300 transition-colors duration-200 text-sm shadow-md">
+                  <span class="text-lg mr-1">🔊</span> Nghe
+                </button>
+                <button onclick="stopSpeaking()" class="flex items-center px-3 py-1 bg-red-200 text-red-800 rounded-full hover:bg-red-300 transition-colors duration-200 text-sm shadow-md">
+                  <span class="text-lg mr-1">🛑</span> Dừng
+                </button>
+              </span>
             </p>
-            <pre id="a1" class="whitespace-pre-wrap text-gray-800"></pre>
+            <pre id="a1" class="whitespace-pre-wrap text-gray-800 text-sm leading-relaxed"></pre>
           </div>
-          <div>
-            <p class="font-semibold text-red-700">
-              🅱️ Debater B - Vòng 1:
-              <button onclick="speakText('b1')" class="ml-2 text-sm text-red-500 hover:underline">🔊 Nghe</button><button onclick="stopSpeaking()" class="ml-2 text-sm text-red-500 hover:underline">🛑 Dừng đọc</button>
+
+          <!-- Debater B - Round 1 -->
+          <div class="bg-white p-5 rounded-xl shadow-lg border-r-8 border-pink-600 relative group hover:shadow-xl transition duration-200">
+            <p class="font-bold text-xl text-pink-700 flex items-center justify-between mb-2">
+              <span class="inline-flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 order-last ml-auto">
+                <button onclick="speakText('b1')" class="flex items-center px-3 py-1 bg-pink-200 text-pink-800 rounded-full hover:bg-pink-300 transition-colors duration-200 text-sm shadow-md">
+                  <span class="text-lg mr-1">🔊</span> Nghe
+                </button>
+                <button onclick="stopSpeaking()" class="flex items-center px-3 py-1 bg-red-200 text-red-800 rounded-full hover:bg-red-300 transition-colors duration-200 text-sm shadow-md">
+                  <span class="text-lg mr-1">🛑</span> Dừng
+                </button>
+              </span>
+              <span>🅱️ Debater B - Vòng 1:</span>
             </p>
-            <pre id="b1" class="whitespace-pre-wrap text-gray-800"></pre>
+            <pre id="b1" class="whitespace-pre-wrap text-gray-800 text-sm leading-relaxed text-left"></pre>
           </div>
-          <div>
-            <p class="font-semibold text-blue-700">
-              🅰️ Debater A - Vòng 2:
-              <button onclick="speakText('a2')" class="ml-2 text-sm text-blue-500 hover:underline">🔊 Nghe</button><button onclick="stopSpeaking()" class="ml-2 text-sm text-red-500 hover:underline">🛑 Dừng đọc</button>
+
+          <!-- Debater A - Round 2 -->
+          <div class="bg-white p-5 rounded-xl shadow-lg border-l-8 border-blue-600 relative group hover:shadow-xl transition duration-200">
+            <p class="font-bold text-xl text-blue-700 flex items-center justify-between mb-2">
+              <span>🅰️ Debater A - Vòng 2:</span>
+              <span class="inline-flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <button onclick="speakText('a2')" class="flex items-center px-3 py-1 bg-blue-200 text-blue-800 rounded-full hover:bg-blue-300 transition-colors duration-200 text-sm shadow-md">
+                  <span class="text-lg mr-1">🔊</span> Nghe
+                </button>
+                <button onclick="stopSpeaking()" class="flex items-center px-3 py-1 bg-red-200 text-red-800 rounded-full hover:bg-red-300 transition-colors duration-200 text-sm shadow-md">
+                  <span class="text-lg mr-1">🛑</span> Dừng
+                </button>
+              </span>
             </p>
-            <pre id="a2" class="whitespace-pre-wrap text-gray-800"></pre>
+            <pre id="a2" class="whitespace-pre-wrap text-gray-800 text-sm leading-relaxed"></pre>
           </div>
-          <div>
-            <p class="font-semibold text-red-700">
-              🅱️ Debater B - Vòng 2:
-              <button onclick="speakText('b2')" class="ml-2 text-sm text-green-500 hover:underline">🔊 Nghe</button><button onclick="stopSpeaking()" class="ml-2 text-sm text-red-500 hover:underline">🛑 Dừng đọc</button>
+
+          <!-- Debater B - Round 2 -->
+          <div class="bg-white p-5 rounded-xl shadow-lg border-r-8 border-pink-600 relative group hover:shadow-xl transition duration-200">
+            <p class="font-bold text-xl text-pink-700 flex items-center justify-between mb-2">
+              <span class="inline-flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 order-last ml-auto">
+                <button onclick="speakText('b2')" class="flex items-center px-3 py-1 bg-pink-200 text-pink-800 rounded-full hover:bg-pink-300 transition-colors duration-200 text-sm shadow-md">
+                  <span class="text-lg mr-1">🔊</span> Nghe
+                </button>
+                <button onclick="stopSpeaking()" class="flex items-center px-3 py-1 bg-red-200 text-red-800 rounded-full hover:bg-red-300 transition-colors duration-200 text-sm shadow-md">
+                  <span class="text-lg mr-1">🛑</span> Dừng
+                </button>
+              </span>
+              <span class ="text-right">🅱️ Debater B - Vòng 2:</span>
             </p>
-            <pre id="b2" class="whitespace-pre-wrap text-gray-800"></pre>
+            <pre id="b2" class="whitespace-pre-wrap text-gray-800 text-sm leading-relaxed text-left"></pre>
           </div>
         </div>
       </div>
 
-      <div class="bg-green-50 p-4 border border-green-300 rounded">
-        <strong class="text-lg">✅ Kết quả:
-          <button onclick="speakText('resultOutput')" class="ml-2 text-sm text-green-600 hover:underline">🔊 Nghe</button><button onclick="stopSpeaking()" class="ml-2 text-sm text-red-500 hover:underline">🛑 Dừng đọc</button>
+      <!-- Result Box -->
+      <div class="bg-gradient-to-br from-lime-200 to-green-300 p-6 border-4 border-green-500 rounded-3xl shadow-2xl animate-enter-fade-slide">
+        <strong class="text-3xl font-bold text-green-800 mb-4 block text-center">✅ Kết quả Chung cuộc:
+          <span class="inline-flex space-x-2 ml-4">
+            <button onclick="speakText('resultOutput')" class="flex items-center px-3 py-1 bg-green-200 text-green-800 rounded-full hover:bg-green-300 transition-colors duration-200 text-sm shadow-md">
+              <span class="text-lg mr-1">🔊</span> Nghe
+            </button>
+            <button onclick="stopSpeaking()" class="flex items-center px-3 py-1 bg-red-200 text-red-800 rounded-full hover:bg-red-300 transition-colors duration-200 text-sm shadow-md">
+              <span class="text-lg mr-1">🛑</span> Dừng
+            </button>
+          </span>
         </strong>
-        <pre id="resultOutput" class="mt-2 whitespace-pre-wrap text-green-700"></pre>
+        <pre id="resultOutput" class="mt-4 whitespace-pre-wrap text-green-900 text-lg leading-relaxed font-semibold text-center bg-white bg-opacity-70 p-4 rounded-lg shadow-inner"></pre>
       </div>
     </div>
   </div>
@@ -65,62 +187,104 @@
     function loadVoices() {
       voices = speechSynthesis.getVoices();
       if (!voices.length) {
-        setTimeout(loadVoices, 100);
+        setTimeout(loadVoices, 100); // Retry if voices are not loaded yet
       }
     }
 
     window.speechSynthesis.onvoiceschanged = loadVoices;
-    loadVoices();
+    loadVoices(); // Initial load
 
     async function startDebate() {
       const btn = document.getElementById("debateBtn");
-      const topic = document.getElementById("topicInput").value;
-      if (!topic.trim()) return;
+      const topicInput = document.getElementById("topicInput");
+      const topic = topicInput.value;
+
+      if (!topic.trim()) {
+        topicInput.classList.add("border-red-500", "ring-red-200", "animate-shine");
+        topicInput.focus();
+        setTimeout(() => {
+            topicInput.classList.remove("border-red-500", "ring-red-200", "animate-shine");
+        }, 1500); // Remove red border after a short time
+        return;
+      }
+      topicInput.classList.remove("border-red-500", "ring-red-200", "animate-shine");
 
       btn.disabled = true;
-      btn.textContent = "Đang xử lý...";
+      btn.innerHTML = '<span class="text-2xl animate-spin">🔄</span> <span class="ml-2">Đang tạo sóng màu...</span>'; // Thematic loading text with icon
 
-      const response = await fetch("http://localhost:8000/debate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic })
-      });
+      const resultContainer = document.getElementById("resultContainer");
+      resultContainer.classList.add("hidden"); // Hide previous results
 
-      const data = await response.json();
+      try {
+        const response = await fetch("http://localhost:8000/debate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topic })
+        });
 
-      document.getElementById("a1").textContent = data.a1;
-      document.getElementById("b1").textContent = data.b1;
-      document.getElementById("a2").textContent = data.a2;
-      document.getElementById("b2").textContent = data.b2;
-      document.getElementById("resultOutput").textContent = data.result;
-      document.getElementById("resultContainer").classList.remove("hidden");
+        if (!response.ok) {
+          throw new Error(`Lỗi HTTP: ${response.status} - ${response.statusText}`);
+        }
 
-      btn.disabled = false;
-      btn.textContent = "Bắt đầu tranh luận";
+        const data = await response.json();
+
+        // Populate content
+        document.getElementById("a1").textContent = data.a1 || "Nội dung không khả dụng.";
+        document.getElementById("b1").textContent = data.b1 || "Nội dung không khả dụng.";
+        document.getElementById("a2").textContent = data.a2 || "Nội dung không khả dụng.";
+        document.getElementById("b2").textContent = data.b2 || "Nội dung không khả dụng.";
+        document.getElementById("resultOutput").textContent = data.result || "Kết quả chưa được công bố.";
+
+        // Show results with animation
+        resultContainer.classList.remove("hidden");
+        resultContainer.classList.remove("animate-enter-fade-slide"); // Reset animation
+        void resultContainer.offsetWidth; // Trigger reflow
+        resultContainer.classList.add("animate-enter-fade-slide"); // Re-add animation
+
+      } catch (error) {
+        console.error("Lỗi khi gọi API tranh luận:", error);
+        document.getElementById("resultOutput").textContent = `💔 Đã xảy ra lỗi: ${error.message}. Vui lòng đảm bảo server backend đang chạy và thử lại!`;
+        resultContainer.classList.remove("hidden"); // Show error message
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="text-2xl">🚀</span> <span>Bắt đầu tranh luận ngay!</span> <span class="text-2xl">💥</span>'; // Reset button text and icons
+      }
     }
 
+    let currentUtterance = null; // Store the current utterance to cancel
+
     function speakText(id) {
+      stopSpeaking(); // Stop any ongoing speech before starting new one
+
       const text = document.getElementById(id).textContent;
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "vi-VN";
+      currentUtterance = new SpeechSynthesisUtterance(text);
+      currentUtterance.lang = "vi-VN";
 
-      const allViVoices = voices.filter(v => v.lang === "vi-VN");
+      const allViVoices = voices.filter(v => v.lang.startsWith("vi"));
 
-      // Chọn giọng khác nhau cho mỗi vai nếu có nhiều hơn 1 giọng
-      if (allViVoices.length > 1) {
-        if (id.startsWith("a")) utterance.voice = allViVoices[0];
-        else if (id.startsWith("b")) utterance.voice = allViVoices[1];
-        else utterance.voice = allViVoices[0];
+      // Try to select different voices for Debater A and B
+      if (allViVoices.length >= 2) {
+        if (id.startsWith("a")) currentUtterance.voice = allViVoices[0];
+        else if (id.startsWith("b")) currentUtterance.voice = allViVoices[1];
+        else currentUtterance.voice = allViVoices[0]; // For result or if only one debater
+      } else if (allViVoices.length > 0) {
+        currentUtterance.voice = allViVoices[0]; // Fallback to any available VI voice
       } else {
-        utterance.voice = allViVoices[0];
+        console.warn("Không tìm thấy giọng đọc tiếng Việt nào.");
+        // Optionally alert the user or use default voice
       }
-
-      speechSynthesis.cancel();
-      speechSynthesis.speak(utterance);
+      
+      // Add a slight delay for smoother transition between speeches
+      setTimeout(() => {
+        speechSynthesis.speak(currentUtterance);
+      }, 100);
     }
 
     function stopSpeaking() {
-      speechSynthesis.cancel();
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+      }
+      currentUtterance = null;
     }
   </script>
 </body>
