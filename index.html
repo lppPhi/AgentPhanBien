@@ -5,174 +5,123 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tranh Luận AI</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    /* Custom styles if needed, though Tailwind is primary */
-    /* Example: A subtle pulsing animation on the button when disabled */
-    @keyframes pulse-opacity {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.8; }
-    }
-    .disabled:disabled {
-        animation: pulse-opacity 1.5s infinite ease-in-out;
-    }
-  </style>
 </head>
-<!-- Using a vibrant gradient background -->
-<body class="bg-gradient-to-br from-purple-300 to-pink-400 min-h-screen p-4 text-gray-800">
-  <div class="max-w-4xl mx-auto p-6 space-y-8 bg-white bg-opacity-80 rounded-3xl shadow-2xl backdrop-filter backdrop-blur-lg border border-opacity-30 border-white">
-    
-    <!-- Flashy Heading with Text Gradient -->
-    <h1 class="text-5xl md:text-6xl font-extrabold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-green-500 to-purple-600 drop-shadow-xl">
-      🧠 Tranh luận AI
-    </h1>
-    
-    <!-- Input Area -->
-    <div class="relative">
-      <label for="topicInput" class="block text-lg font-semibold text-purple-700 mb-2">Chủ đề tranh luận:</label>
-      <textarea id="topicInput" placeholder="Nhập chủ đề tranh luận cực HOT! (VD: AI có nên thay thế giáo viên?)" 
-                class="w-full p-4 border-4 border-pink-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-400 min-h-[120px] shadow-lg text-gray-800 placeholder-pink-400 transition duration-300 ease-in-out transform hover:scale-105"></textarea>
-      <svg class="absolute top-1/2 right-4 transform -translate-y-1/2 text-pink-500 opacity-50 hidden md:block" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-4H8V8h3v8zm4 0h-2v-4h-1V8h3v8z"/>
-      </svg>
-    </div>
+<body class="bg-gray-50 text-gray-900">
+  <div class="max-w-3xl mx-auto p-6 space-y-6">
+    <h1 class="text-3xl font-bold text-center">🧠 Tranh luận cùng AI</h1>
 
-    <!-- Button -->
-    <button onclick="startDebate()" id="debateBtn" 
-            class="w-full px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-purple-900 font-extrabold text-xl rounded-full shadow-2xl hover:from-yellow-500 hover:to-orange-600 hover:shadow-3xl transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:animate-pulse-opacity">
-      🔥 Bắt đầu tranh luận ngay! 🔥
+    <textarea id="topicInput" placeholder="Nhập chủ đề tranh luận (VD: AI có nên thay thế giáo viên?)" class="w-full p-3 border border-gray-300 rounded min-h-[100px]"></textarea>
+    <button onclick="startDebate()" id="debateBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50">
+      Bắt đầu tranh luận
     </button>
 
-    <!-- Result Container -->
-    <div id="resultContainer" class="space-y-6 mt-8 hidden">
-      
-      <!-- Debate Rounds Box -->
-      <div class="bg-gradient-to-tr from-blue-100 to-purple-100 p-6 border-4 border-indigo-400 rounded-3xl shadow-2xl">
-        <strong class="text-2xl font-bold text-indigo-800 mb-4 block">💬 Diễn biến Cuộc tranh luận:</strong>
-        <div class="mt-4 space-y-6 text-base">
-          
-          <!-- Debater A - Round 1 -->
-          <div class="bg-white p-5 rounded-xl shadow-lg border-l-8 border-blue-600">
-            <p class="font-bold text-xl text-blue-700 flex items-center mb-2"><span class="mr-2 text-2xl">🅰️</span> Debater A - Vòng 1:</p>
-            <pre id="a1" class="whitespace-pre-wrap text-gray-800 text-sm leading-relaxed"></pre>
+    <div id="resultContainer" class="space-y-4 hidden">
+      <div class="bg-white p-4 border border-gray-300 rounded">
+        <strong class="text-lg">💬 Cuộc tranh luận:</strong>
+        <div class="mt-2 space-y-4 text-sm">
+          <div>
+            <p class="font-semibold text-blue-700">
+              🅰️ Debater A - Vòng 1:
+              <button onclick="speakText('a1')" class="ml-2 text-sm text-blue-500 hover:underline">🔊 Nghe</button><button onclick="stopSpeaking()" class="ml-2 text-sm text-red-500 hover:underline">🛑 Dừng đọc</button>
+            </p>
+            <pre id="a1" class="whitespace-pre-wrap text-gray-800"></pre>
           </div>
-
-          <!-- Debater B - Round 1 -->
-          <div class="bg-white p-5 rounded-xl shadow-lg border-r-8 border-pink-600">
-            <p class="font-bold text-xl text-pink-700 flex items-center justify-end text-right mb-2"><span class="ml-2 text-2xl order-last">🅱️</span> Debater B - Vòng 1:</p>
-            <pre id="b1" class="whitespace-pre-wrap text-gray-800 text-sm leading-relaxed text-left"></pre>
+          <div>
+            <p class="font-semibold text-red-700">
+              🅱️ Debater B - Vòng 1:
+              <button onclick="speakText('b1')" class="ml-2 text-sm text-red-500 hover:underline">🔊 Nghe</button><button onclick="stopSpeaking()" class="ml-2 text-sm text-red-500 hover:underline">🛑 Dừng đọc</button>
+            </p>
+            <pre id="b1" class="whitespace-pre-wrap text-gray-800"></pre>
           </div>
-
-          <!-- Debater A - Round 2 -->
-          <div class="bg-white p-5 rounded-xl shadow-lg border-l-8 border-blue-600">
-            <p class="font-bold text-xl text-blue-700 flex items-center mb-2"><span class="mr-2 text-2xl">🅰️</span> Debater A - Vòng 2:</p>
-            <pre id="a2" class="whitespace-pre-wrap text-gray-800 text-sm leading-relaxed"></pre>
+          <div>
+            <p class="font-semibold text-blue-700">
+              🅰️ Debater A - Vòng 2:
+              <button onclick="speakText('a2')" class="ml-2 text-sm text-blue-500 hover:underline">🔊 Nghe</button><button onclick="stopSpeaking()" class="ml-2 text-sm text-red-500 hover:underline">🛑 Dừng đọc</button>
+            </p>
+            <pre id="a2" class="whitespace-pre-wrap text-gray-800"></pre>
           </div>
-
-          <!-- Debater B - Round 2 -->
-          <div class="bg-white p-5 rounded-xl shadow-lg border-r-8 border-pink-600">
-            <p class="font-bold text-xl text-pink-700 flex items-center justify-end text-right mb-2"><span class="ml-2 text-2xl order-last">🅱️</span> Debater B - Vòng 2:</p>
-            <pre id="b2" class="whitespace-pre-wrap text-gray-800 text-sm leading-relaxed text-left"></pre>
+          <div>
+            <p class="font-semibold text-red-700">
+              🅱️ Debater B - Vòng 2:
+              <button onclick="speakText('b2')" class="ml-2 text-sm text-green-500 hover:underline">🔊 Nghe</button><button onclick="stopSpeaking()" class="ml-2 text-sm text-red-500 hover:underline">🛑 Dừng đọc</button>
+            </p>
+            <pre id="b2" class="whitespace-pre-wrap text-gray-800"></pre>
           </div>
         </div>
       </div>
 
-      <!-- Result Box -->
-      <div class="bg-gradient-to-br from-lime-200 to-green-300 p-6 border-4 border-green-500 rounded-3xl shadow-2xl animate-bounce-once">
-        <strong class="text-2xl font-bold text-green-800 mb-4 block">✅ Kết quả Chung cuộc:</strong>
-        <pre id="resultOutput" class="mt-4 whitespace-pre-wrap text-green-900 text-lg leading-relaxed font-semibold"></pre>
+      <div class="bg-green-50 p-4 border border-green-300 rounded">
+        <strong class="text-lg">✅ Kết quả:
+          <button onclick="speakText('resultOutput')" class="ml-2 text-sm text-green-600 hover:underline">🔊 Nghe</button><button onclick="stopSpeaking()" class="ml-2 text-sm text-red-500 hover:underline">🛑 Dừng đọc</button>
+        </strong>
+        <pre id="resultOutput" class="mt-2 whitespace-pre-wrap text-green-700"></pre>
       </div>
     </div>
   </div>
 
   <script>
+    let voices = [];
+
+    function loadVoices() {
+      voices = speechSynthesis.getVoices();
+      if (!voices.length) {
+        setTimeout(loadVoices, 100);
+      }
+    }
+
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+
     async function startDebate() {
       const btn = document.getElementById("debateBtn");
       const topic = document.getElementById("topicInput").value;
-      if (!topic.trim()) {
-        // Optional: Add a visual cue if topic is empty
-        document.getElementById("topicInput").classList.add("border-red-500", "ring-red-200");
-        return;
-      }
-      document.getElementById("topicInput").classList.remove("border-red-500", "ring-red-200"); // Remove validation style
+      if (!topic.trim()) return;
 
       btn.disabled = true;
-      btn.textContent = "Đang trang luận ..."; // More thematic text
+      btn.textContent = "Đang xử lý...";
 
-      // Hide previous results while loading
-      document.getElementById("resultContainer").classList.add("hidden");
+      const response = await fetch("http://localhost:8000/debate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic })
+      });
 
-      try {
-        const response = await fetch("http://localhost:8000/debate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ topic })
-        });
+      const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+      document.getElementById("a1").textContent = data.a1;
+      document.getElementById("b1").textContent = data.b1;
+      document.getElementById("a2").textContent = data.a2;
+      document.getElementById("b2").textContent = data.b2;
+      document.getElementById("resultOutput").textContent = data.result;
+      document.getElementById("resultContainer").classList.remove("hidden");
 
-        const data = await response.json();
+      btn.disabled = false;
+      btn.textContent = "Bắt đầu tranh luận";
+    }
 
-        // Populate results
-        document.getElementById("a1").textContent = data.a1 || "Không có dữ liệu";
-        document.getElementById("b1").textContent = data.b1 || "Không có dữ liệu";
-        document.getElementById("a2").textContent = data.a2 || "Không có dữ liệu";
-        document.getElementById("b2").textContent = data.b2 || "Không có dữ liệu";
-        document.getElementById("resultOutput").textContent = data.result || "Không có kết quả cuối cùng";
+    function speakText(id) {
+      const text = document.getElementById(id).textContent;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "vi-VN";
 
-        // Show results
-        document.getElementById("resultContainer").classList.remove("hidden");
+      const allViVoices = voices.filter(v => v.lang === "vi-VN");
 
-      } catch (error) {
-        console.error("Lỗi khi fetch dữ liệu:", error);
-        // Display error to user
-        document.getElementById("resultOutput").textContent = `Đã xảy ra lỗi: ${error.message}. Vui lòng thử lại.`;
-        document.getElementById("resultContainer").classList.remove("hidden"); // Show container even with error message
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "🔥 Bắt đầu tranh luận ngay! 🔥"; // Reset button text
+      // Chọn giọng khác nhau cho mỗi vai nếu có nhiều hơn 1 giọng
+      if (allViVoices.length > 1) {
+        if (id.startsWith("a")) utterance.voice = allViVoices[0];
+        else if (id.startsWith("b")) utterance.voice = allViVoices[1];
+        else utterance.voice = allViVoices[0];
+      } else {
+        utterance.voice = allViVoices[0];
       }
+
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
+    }
+
+    function stopSpeaking() {
+      speechSynthesis.cancel();
     }
   </script>
-
-  <!-- Simple Keyframe Animations (Add to style tag) -->
-  <style>
-      /* Existing pulse-opacity animation */
-      @keyframes pulse-opacity {
-        0%, 100% { opacity: 0.5; }
-        50% { opacity: 0.8; }
-      }
-      .disabled:disabled {
-          animation: pulse-opacity 1.5s infinite ease-in-out;
-      }
-
-      /* Bounce on heading elements */
-      @keyframes bounce-slow {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
-      }
-      .animate-bounce-slow {
-          animation: bounce-slow 3s infinite ease-in-out;
-      }
-       @keyframes pulse-slow {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.05); }
-      }
-      .animate-pulse-slow {
-          animation: pulse-slow 3s infinite ease-in-out;
-      }
-
-      /* Simple bounce for the result box */
-       @keyframes bounce-once {
-            0% { transform: translateY(-10px); opacity: 0; }
-            50% { transform: translateY(0px); opacity: 1; }
-            100% { transform: translateY(0px); opacity: 1; } /* Stay after bouncing */
-        }
-        .animate-bounce-once {
-            animation: bounce-once 1s ease-out forwards; /* forwards keeps the final state */
-        }
-
-  </style>
 </body>
 </html>
